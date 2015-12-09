@@ -92,3 +92,4 @@ obj-$(CONFIG_TOUCHSCREEN_LGE_SIC)	+= lge_touch_core.o
 obj-$(CONFIG_TOUCHSCREEN_LGE_SIC)	+= touch_sic.o
 obj-$(CONFIG_TOUCHSCREEN_LGE_SIC)	+= touch_sic_abt.o
 obj-$(CONFIG_TOUCHSCREEN_LGE_SIC_SPI)	+= pplus/
+obj-$(CONFIG_WAKE_GESTURES)		+= wake_gestures.o

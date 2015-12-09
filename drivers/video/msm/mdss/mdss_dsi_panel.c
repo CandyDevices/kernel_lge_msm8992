@@ -28,6 +28,10 @@
 #if IS_ENABLED(CONFIG_LGE_DISPLAY_POWER_SEQUENCE)
 #include "lge/panel/oem_mdss_dsi_common.h"
 #endif
+#ifdef CONFIG_WAKE_GESTURES
+#include <linux/wake_gestures.h>
+static int onboot = true;
+#endif
 
 #if defined (CONFIG_LGE_DISPLAY_TUNING) || defined(CONFIG_LGE_DISPLAY_DUAL_BACKLIGHT)
 struct mdss_panel_data *pdata_base;
@@ -303,6 +307,15 @@ int mdss_dsi_panel_reset(struct mdss_panel_data *pdata, int enable)
 	pinfo = &(ctrl_pdata->panel_data.panel_info);
 
 	if (enable) {
+
+#ifdef CONFIG_WAKE_GESTURES
+		if (onboot == false) {
+			gpio_set_value((ctrl_pdata->rst_gpio), 0);
+			gpio_free(ctrl_pdata->rst_gpio);
+		}
+		onboot=false;
+#endif
+
 		rc = mdss_dsi_request_gpios(ctrl_pdata);
 		if (rc) {
 			pr_err("gpio request failed\n");
@@ -343,8 +356,14 @@ int mdss_dsi_panel_reset(struct mdss_panel_data *pdata, int enable)
 			gpio_set_value((ctrl_pdata->disp_en_gpio), 0);
 			gpio_free(ctrl_pdata->disp_en_gpio);
 		}
+#ifdef CONFIG_WAKE_GESTURES
+		if (!gestures_enabled) {
+#endif
 		gpio_set_value((ctrl_pdata->rst_gpio), 0);
 		gpio_free(ctrl_pdata->rst_gpio);
+#ifdef CONFIG_WAKE_GESTURES
+		}
+#endif
 		if (gpio_is_valid(ctrl_pdata->mode_gpio))
 			gpio_free(ctrl_pdata->mode_gpio);
 	}
@@ -742,6 +761,11 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 	if (pinfo->lge_pan_info.lge_panel_send_off_cmd == false) {
 		pr_info("%s: skip panel off cmd, ctrl=%p ndx=%d\n", __func__, ctrl, ctrl->ndx);
 		goto end;
+	}
+#endif
+#ifdef CONFIG_WAKE_GESTURES
+	if (gestures_enabled) {
+		ctrl->off_cmds.cmds[1].payload[0] = 0x11;
 	}
 #endif
 
