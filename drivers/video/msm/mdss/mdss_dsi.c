@@ -222,9 +222,6 @@ static int mdss_dsi_panel_power_off(struct mdss_panel_data *pdata)
 	}
 #endif
 #endif
-
-end:
-	return ret;
 }
 
 static int mdss_dsi_panel_power_on(struct mdss_panel_data *pdata)
