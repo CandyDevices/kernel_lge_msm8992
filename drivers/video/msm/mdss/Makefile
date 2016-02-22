@@ -1,5 +1,7 @@
 ccflags-y += -I$(src)
 
+CFLAGS_mdss_dsi.o += -Wno-return-type
+
 obj-$(CONFIG_FB_MSM_MDSS_MHL3) += mhl3/
 
 mdss-mdp3-objs = mdp3.o mdp3_dma.o mdp3_ctrl.o dsi_status_v2.o
