@@ -174,7 +174,7 @@ static int mdss_dsi_panel_power_off(struct mdss_panel_data *pdata)
 	if (pdata == NULL) {
 		pr_err("%s: Invalid input data\n", __func__);
 		ret = -EINVAL;
-		goto end;
+		return ret;
 	}
 
 	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata,
@@ -220,6 +220,7 @@ static int mdss_dsi_panel_power_off(struct mdss_panel_data *pdata)
 		}
 #ifdef CONFIG_WAKE_GESTURES
 	}
+#endif
 #endif
 
 end:
