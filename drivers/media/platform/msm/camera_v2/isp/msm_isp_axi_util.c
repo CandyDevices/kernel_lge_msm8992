@@ -2081,8 +2081,10 @@ static int msm_isp_stop_axi_stream(struct vfe_device *vfe_dev,
 				vfe_dev->hw_info->vfe_ops.core_ops.reg_update(
 					vfe_dev,
 					SRC_TO_INTF(stream_info->stream_src));
+				mutex_unlock(&vfe_dev->core_mutex);    /*LGE_CHANGE, add QCT_PATCH about stability after Post CS , 2015-03-31, yousung.kang@lge.com */
 				rc = msm_isp_axi_wait_for_cfg_done(vfe_dev,
 					camif_update, src_mask, 1);
+				mutex_lock(&vfe_dev->core_mutex);     /*LGE_CHANGE, add QCT_PATCH about stability after Post CS , 2015-03-31, yousung.kang@lge.com */
 				if (rc < 0)
 					pr_err("cfg done failed\n");
 				rc = -EBUSY;

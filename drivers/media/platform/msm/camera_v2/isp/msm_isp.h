@@ -611,6 +611,7 @@ struct vfe_device {
 	spinlock_t tasklet_lock;
 	spinlock_t shared_data_lock;
 	spinlock_t reg_update_lock;
+        spinlock_t  shared_cfg_reg_lock;  //LGE_CHANGE, 20150609, Change spin_lock for watchodog case using shard_data_lock, changhwan.kang.kang
 	struct list_head tasklet_q;
 	struct tasklet_struct vfe_tasklet;
 	struct msm_vfe_tasklet_queue_cmd

@@ -182,6 +182,7 @@ int msm_isp_update_bandwidth(enum msm_isp_hw_client client,
 				isp_bandwidth_mgr.client_info[i].ib;
 		}
 	}
+
 	msm_bus_scale_client_update_request(isp_bandwidth_mgr.bus_client,
 		isp_bandwidth_mgr.bus_vector_active_idx);
 	/* Insert into circular buffer */
@@ -1049,7 +1050,7 @@ static int msm_isp_send_hw_cmd(struct vfe_device *vfe_dev,
 			is_module_cfg_lock_needed(reg_cfg_cmd->
 			u.mask_info.reg_offset);
 		if (grab_lock)
-			spin_lock_irqsave(&vfe_dev->shared_data_lock, flags);
+			spin_lock_irqsave(&vfe_dev->shared_cfg_reg_lock, flags); //LGE_CHANGE, 20150609, Change spin_lock for watchodog case using shard_data_lock, changhwan.kang.kang
 		temp = msm_camera_io_r(vfe_dev->vfe_base +
 			reg_cfg_cmd->u.mask_info.reg_offset);
 
@@ -1058,8 +1059,7 @@ static int msm_isp_send_hw_cmd(struct vfe_device *vfe_dev,
 		msm_camera_io_w(temp, vfe_dev->vfe_base +
 			reg_cfg_cmd->u.mask_info.reg_offset);
 		if (grab_lock)
-			spin_unlock_irqrestore(&vfe_dev->shared_data_lock,
-				flags);
+			spin_unlock_irqrestore(&vfe_dev->shared_cfg_reg_lock, flags); //LGE_CHANGE, 20150609, Change spin_lock for watchodog case using shard_data_lock, changhwan.kang.kang
 		break;
 	}
 	case VFE_WRITE_DMI_16BIT:
